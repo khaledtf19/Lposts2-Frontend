@@ -5,6 +5,7 @@ import {
   Post,
   UseGuards,
   Request,
+  Put,
 } from "@nestjs/common";
 import { JwtAuthGuard } from "src/auth/jwt/jwt-auth.guard";
 import { CreateUserDto } from "./dto/users.dto";
@@ -24,4 +25,7 @@ export class UsersController {
   async showProfile(@Request() req: any) {
     return req.user;
   }
+
+  @Put("")
+  async updateUser() {}
 }

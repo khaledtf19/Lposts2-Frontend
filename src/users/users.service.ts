@@ -6,19 +6,19 @@ import {
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { CreateUserDto } from "./dto/users.dto";
+import { CreateUserDto, UserDto } from "./dto/users.dto";
 import { User, UserDocument } from "./models/user.schema";
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  async findOneByEmail(email: string): Promise<User> {
+  async findOneByEmail(email: string): Promise<UserDto> {
     const user = await this.userModel.findOne({ email }).exec();
     return user;
   }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<UserDto> {
     if (createUserDto.password !== createUserDto.confirmation) {
       throw new HttpException(
         "Password doesn't match the confirmation...",
@@ -32,6 +32,7 @@ export class UsersService {
     }
 
     const createUser = new this.userModel(createUserDto);
+    console.log(createUser);
     return createUser.save();
   }
 

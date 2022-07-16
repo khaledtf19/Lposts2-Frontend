@@ -5,10 +5,7 @@ export type UserDocument = User & Document;
 
 @Schema()
 export class User {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "User" })
-  _id: string;
-
-  @Prop({ required: true })
+  @Prop({ required: true, lowercase: true })
   email: string;
 
   @Prop({ required: true })
@@ -19,12 +16,15 @@ export class User {
 
   @Prop({
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    required: true,
+    default: [],
   })
-  friends: User;
+  friends: [mongoose.Schema.Types.ObjectId];
 
-  @Prop({ required: true })
-  props: [];
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+    default: [],
+  })
+  posts: [{ type: mongoose.Schema.Types.ObjectId; ref: "Post" }];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

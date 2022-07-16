@@ -16,6 +16,7 @@ import { PostsModule } from "./posts/posts.module";
         uri: configService.get<string>("MONGODB_STRING"),
         useNewUrlParser: true,
         useUnifiedTopology: true,
+        dbName: "LPosts2",
       }),
       inject: [ConfigService],
     }),

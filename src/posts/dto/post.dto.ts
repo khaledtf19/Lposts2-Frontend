@@ -5,3 +5,5 @@ export class CreatePostDto {
   @Length(1, 255)
   postContent: string;
 }
+
+export class UpdatePost {}

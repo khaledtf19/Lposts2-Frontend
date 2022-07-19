@@ -1,6 +1,7 @@
 import { IsEmail, IsNotEmpty, MinLength, Length } from "class-validator";
 
 export class CreateUserDto {
+  @IsNotEmpty()
   @IsEmail()
   email: string;
 
@@ -23,4 +24,21 @@ export class UserDto {
   password: string;
   posts: [] | any;
   friends: [] | any;
+}
+
+export class UpdateUserDto {
+  name: string;
+  email: string;
+}
+
+export class UpdateUserNameDto {
+  @IsNotEmpty()
+  @Length(3, 50)
+  name: string;
+}
+
+export class UpdateUserEmailDto {
+  @IsNotEmpty()
+  @IsEmail()
+  name: string;
 }

@@ -1,13 +1,13 @@
 import { IsNotEmpty, Length } from "class-validator";
 
-export class CreatePostDto {
+export class CreateCommentDto {
   @IsNotEmpty()
   @Length(1, 255)
-  postContent: string;
+  commentContent: string;
 }
 
-export class UpdatePostDto {
+export class UpdateCommentDto {
   @IsNotEmpty()
   @Length(1, 255)
-  postContent: string;
+  commentContent: string;
 }

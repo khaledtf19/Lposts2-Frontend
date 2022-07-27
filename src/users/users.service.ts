@@ -3,15 +3,12 @@ import {
   HttpException,
   HttpStatus,
   NotAcceptableException,
-  NotFoundException,
-  ForbiddenException,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import {
   CreateUserDto,
   UserDto,
-  UpdateUserDto,
   UpdateUserNameDto,
   UpdateUserEmailDto,
 } from "./dto/users.dto";
@@ -57,20 +54,21 @@ export class UsersService {
     return createUser.save();
   }
 
-  async update(user: UserDto, updateUserDto: UpdateUserDto) {
-    if (!updateUserDto.name && !updateUserDto.email) {
-      throw new ForbiddenException();
-    }
-
-    return await this.userModel
-      .findByIdAndUpdate(user._id, {
-        name: updateUserDto.name,
-        email: updateUserDto.email,
-      })
-      .exec();
+  async updateName(
+    user: UserDto,
+    updateUserNameDto: UpdateUserNameDto,
+  ): Promise<UserDto> {
+    return await this.userModel.findByIdAndUpdate(user._id, {
+      name: updateUserNameDto.name,
+    });
   }
 
-  async updateName(user: UserDto, updateUserNameDto: UpdateUserNameDto) {}
-
-  async updateEmail(user: UserDto, updateUserEmailDto: UpdateUserEmailDto) {}
+  async updateEmail(
+    user: UserDto,
+    updateUserEmailDto: UpdateUserEmailDto,
+  ): Promise<UserDto> {
+    return await this.userModel.findByIdAndUpdate(user._id, {
+      email: updateUserEmailDto.email,
+    });
+  }
 }

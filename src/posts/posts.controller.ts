@@ -10,7 +10,7 @@ import {
   Param,
 } from "@nestjs/common";
 import { JwtAuthGuard } from "src/auth/jwt/jwt-auth.guard";
-import { CreatePostDto, UpdatePostDto } from "./dto/post.dto";
+import { CreatePostDto, PostDto, UpdatePostDto } from "./dto/post.dto";
 import { PostsService } from "./posts.service";
 
 @Controller("posts")
@@ -19,25 +19,28 @@ export class PostsController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  getAllPosts() {
+  getAllPosts(): Promise<PostDto[]> {
     return this.postsService.findAll();
   }
 
   @UseGuards(JwtAuthGuard)
   @Get("user/:userId")
-  getAllUserPosts(@Param("userId") userId: string) {
+  getAllUserPosts(@Param("userId") userId: string): Promise<PostDto[]> {
     return this.postsService.findAllUserPosts(userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  createPost(@Request() req: any, @Body() body: CreatePostDto) {
+  createPost(
+    @Request() req: any,
+    @Body() body: CreatePostDto,
+  ): Promise<PostDto> {
     return this.postsService.create(req.user._id, body.postContent);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(":id")
-  findPostById(@Param("id") id: string) {
+  findPostById(@Param("id") id: string): Promise<PostDto> {
     return this.postsService.findById(id);
   }
 

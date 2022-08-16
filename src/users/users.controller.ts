@@ -11,9 +11,11 @@ import {
 import { JwtAuthGuard } from "src/auth/jwt/jwt-auth.guard";
 import {
   CreateUserDto,
+  CreateUserResponseDto,
   UpdateUserEmailDto,
   UpdateUserNameDto,
   UserDto,
+  UpdateUserResponseDto,
 } from "./dto/users.dto";
 import { UsersService } from "./users.service";
 
@@ -22,19 +24,19 @@ export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   @Post()
-  createUser(@Body() body: CreateUserDto): Promise<UserDto> {
+  createUser(@Body() body: CreateUserDto): Promise<CreateUserResponseDto> {
     return this.userService.create(body);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get("profile")
-  async showProfile(@Request() req: any) {
+  @Get("me")
+  async showProfile(@Request() req: any): Promise<UserDto> {
     return req.user;
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(":id")
-  findUserById(@Param("id") id: string) {
+  findUserById(@Param("id") id: string): Promise<UserDto> {
     return this.userService.findOneById(id);
   }
 
@@ -43,7 +45,7 @@ export class UsersController {
   async updateUserName(
     @Request() req: any,
     @Body() body: UpdateUserNameDto,
-  ): Promise<UserDto> {
+  ): Promise<UpdateUserResponseDto> {
     return this.userService.updateName(req.user, body);
   }
 
@@ -52,7 +54,7 @@ export class UsersController {
   async updateUserEmail(
     @Request() req: any,
     @Body() body: UpdateUserEmailDto,
-  ): Promise<UserDto> {
+  ): Promise<UpdateUserResponseDto> {
     return this.userService.updateEmail(req.user, body);
   }
 }

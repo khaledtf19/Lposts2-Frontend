@@ -3,6 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { UserDto } from "src/users/dto/users.dto";
 import { User, UserDocument } from "src/users/models/user.schema";
+import { PostDto } from "./dto/post.dto";
 import { Post, PostDocument } from "./models/post.schema";
 
 @Injectable()
@@ -12,8 +13,12 @@ export class PostsService {
     @InjectModel(User.name) private UserModule: Model<UserDocument>,
   ) {}
 
-  async findAll() {
-    return await this.postModel.find().exec();
+  async findAll(): Promise<PostDto[]> {
+    return await this.postModel
+      .find()
+      .populate("owner", "name avatar _id")
+      .sort({ createdAt: "desc" })
+      .exec();
   }
 
   async findById(id: string) {

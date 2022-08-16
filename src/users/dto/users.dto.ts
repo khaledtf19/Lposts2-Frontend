@@ -11,20 +11,25 @@ export class CreateUserDto {
   password: string;
 
   @IsNotEmpty()
-  confirmation: string;
+  confirmPassword: string;
 
   @IsNotEmpty()
   @Length(3, 50)
   name: string;
+
+  @IsNotEmpty()
+  @Length(1, 50)
+  avatar: string;
 }
 
 export class UserDto {
   _id: mongoose.Schema.Types.ObjectId;
   name: string;
   email: string;
-  password: string;
-  posts: [] | any;
-  friends: [] | any;
+  avatar?: string;
+  password?: string;
+  posts?: [] | any;
+  friends?: [] | any;
 }
 
 export class UpdateUserNameDto {
@@ -37,4 +42,12 @@ export class UpdateUserEmailDto {
   @IsNotEmpty()
   @IsEmail()
   email: string;
+}
+
+export class CreateUserResponseDto {
+  data: { email: string; _id: mongoose.ObjectId; name: string };
+}
+
+export class UpdateUserResponseDto {
+  data: { name: string | undefined; email: string | undefined };
 }

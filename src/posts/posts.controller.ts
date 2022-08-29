@@ -17,13 +17,11 @@ import { PostsService } from "./posts.service";
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   getAllPosts(): Promise<PostDto[]> {
     return this.postsService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get("user/:userId")
   getAllUserPosts(@Param("userId") userId: string): Promise<PostDto[]> {
     return this.postsService.findAllUserPosts(userId);
@@ -38,7 +36,6 @@ export class PostsController {
     return this.postsService.create(req.user._id, body.postContent);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(":id")
   findPostById(@Param("id") id: string): Promise<PostDto> {
     return this.postsService.findById(id);

@@ -17,7 +17,6 @@ import { CreateCommentDto, UpdateCommentDto } from "./dto/comment.dto";
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get("post/:id")
   allPostComments(@Param("id") postId: string) {
     return this.commentsService.findPostComments(postId);

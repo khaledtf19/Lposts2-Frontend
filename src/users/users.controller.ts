@@ -30,8 +30,8 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get("me")
-  async showProfile(@Request() req: any): Promise<UserDto> {
-    return req.user;
+  async showProfile(@Request() req: any): Promise<{ data: UserDto }> {
+    return { data: req.user };
   }
 
   @UseGuards(JwtAuthGuard)

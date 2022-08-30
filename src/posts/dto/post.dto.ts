@@ -3,13 +3,15 @@ import { ObjectId } from "mongoose";
 import { UserDto } from "src/users/dto/users.dto";
 
 export class PostDto {
-  postContent: string;
+  _id?: ObjectId;
 
-  owner: ObjectId | UserDto;
+  postContent?: string;
 
-  likes: number;
+  owner?: ObjectId | UserDto;
 
-  whoLike: ObjectId[];
+  likes?: number;
+
+  whoLike?: ObjectId[];
 
   comments?: ObjectId[];
 }

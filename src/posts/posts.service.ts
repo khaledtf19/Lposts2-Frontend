@@ -22,7 +22,11 @@ export class PostsService {
   }
 
   async findById(id: string) {
-    const post = await this.postModel.findById(id).exec();
+    const post = await this.postModel
+      .findById(id)
+      .populate("owner", "name avatar _id")
+      .populate("comments")
+      .exec();
 
     if (!post) {
       throw new ForbiddenException();
@@ -32,7 +36,11 @@ export class PostsService {
   }
 
   async findAllUserPosts(userId: string) {
-    const posts = await this.postModel.find({ owner: userId });
+    const posts = await this.postModel
+      .find({ owner: userId })
+      .populate("owner", "name avatar _id")
+      .sort({ createdAt: "desc" })
+      .exec();
     return posts;
   }
 
@@ -50,7 +58,7 @@ export class PostsService {
   }
 
   async update(user: UserDto, id: string, postContent: string) {
-    const post = await this.findById(id);
+    const post = await this.postModel.findById(id).exec();
 
     if (!post) {
       throw new ForbiddenException();
@@ -110,6 +118,6 @@ export class PostsService {
     }
     await post.save();
 
-    return post;
+    return post.likes;
   }
 }

@@ -32,7 +32,6 @@ export class AuthService {
       name: user.name,
       avatar: user.avatar,
     };
-    console.log(user);
     return { data: { access_token: this.jwtService.sign(payload) } };
   }
 }

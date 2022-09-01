@@ -25,7 +25,10 @@ export class PostsService {
     const post = await this.postModel
       .findById(id)
       .populate("owner", "name avatar _id")
-      .populate("comments")
+      .populate({
+        path: "comments",
+        populate: { path: "owner", select: "name avatar _id" },
+      })
       .exec();
 
     if (!post) {

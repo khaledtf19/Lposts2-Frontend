@@ -39,12 +39,18 @@ export class PostsService {
   }
 
   async findAllUserPosts(userId: string) {
+    const user = await this.UserModule.findById(userId).exec();
+    if (!user) throw new ForbiddenException();
+
     const posts = await this.postModel
       .find({ owner: userId })
       .populate("owner", "name avatar _id")
       .sort({ createdAt: "desc" })
       .exec();
-    return posts;
+    return {
+      posts: posts,
+      user: { _id: user._id, name: user.name, avatar: user.avatar },
+    };
   }
 
   async create(owner: string, postContent: string): Promise<Post> {

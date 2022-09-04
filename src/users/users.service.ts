@@ -32,6 +32,15 @@ export class UsersService {
     };
   }
 
+  async getUserById(id: string): Promise<UserDto> {
+    const user = await this.userModel.findById(id).exec();
+    return {
+      _id: user._id,
+      name: user.name,
+      avatar: user.avatar,
+    };
+  }
+
   async findOneByEmail(email: string): Promise<UserDto> {
     const user = await this.userModel.findOne({ email }).exec();
     if (!user) {
@@ -47,21 +56,24 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<CreateUserResponseDto> {
+    const user = await this.findOneByEmail(createUserDto.email);
+    if (user) {
+      throw new HttpException(
+        "this email is used before",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     if (createUserDto.password !== createUserDto.confirmPassword) {
       throw new HttpException(
         "Password doesn't match confirm password...",
-        HttpStatus.EXPECTATION_FAILED,
+        HttpStatus.BAD_REQUEST,
       );
     }
 
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(createUserDto.password, salt);
     createUserDto.password = hashPassword;
-
-    const user = await this.findOneByEmail(createUserDto.email);
-    if (user) {
-      throw new NotAcceptableException();
-    }
 
     const createUser = new this.userModel(createUserDto);
     createUser.save();

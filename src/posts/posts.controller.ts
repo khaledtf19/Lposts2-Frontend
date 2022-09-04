@@ -23,7 +23,7 @@ export class PostsController {
   }
 
   @Get("user/:userId")
-  getAllUserPosts(@Param("userId") userId: string): Promise<PostDto[]> {
+  getAllUserPosts(@Param("userId") userId: string) {
     return this.postsService.findAllUserPosts(userId);
   }
 

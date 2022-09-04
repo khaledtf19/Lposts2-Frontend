@@ -25,7 +25,7 @@ export class CreateUserDto {
 export class UserDto {
   _id: mongoose.Schema.Types.ObjectId;
   name: string;
-  email: string;
+  email?: string;
   avatar?: string;
   password?: string;
   posts?: [] | any;

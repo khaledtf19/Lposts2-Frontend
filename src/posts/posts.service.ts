@@ -127,6 +127,6 @@ export class PostsService {
     }
     await post.save();
 
-    return post.likes;
+    return { likes: post.likes, whoLike: post.whoLike };
   }
 }

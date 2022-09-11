@@ -93,15 +93,13 @@ export class CommentsService {
     });
 
     if (filter.length !== 0) {
-      comment.likes--;
       comment.whoLike.splice(likeIndex, 1);
     } else {
       comment.whoLike.push(user._id);
-      comment.likes++;
     }
 
     await comment.save();
 
-    return comment;
+    return { whoLike: comment.whoLike };
   }
 }

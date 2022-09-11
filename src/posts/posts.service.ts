@@ -107,9 +107,7 @@ export class PostsService {
   async like(user: UserDto, id: string) {
     const post = await this.postModel.findById(id).exec();
 
-    if (!post) {
-      throw new ForbiddenException();
-    }
+    if (!post) throw new ForbiddenException();
 
     let likeIndex = null;
 
@@ -119,14 +117,13 @@ export class PostsService {
     });
 
     if (filter.length !== 0) {
-      post.likes--;
       post.whoLike.splice(likeIndex, 1);
     } else {
       post.whoLike.push(user._id);
-      post.likes++;
     }
+
     await post.save();
 
-    return { likes: post.likes, whoLike: post.whoLike };
+    return { whoLike: post.whoLike };
   }
 }

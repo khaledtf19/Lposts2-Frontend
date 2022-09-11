@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { Date, Document } from "mongoose";
+import mongoose, { Document } from "mongoose";
 
 export type PostDocument = Document & Post;
 
@@ -10,9 +10,6 @@ export class Post {
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "User", required: true })
   owner: mongoose.Schema.Types.ObjectId;
-
-  @Prop({ default: 0 })
-  likes: number;
 
   @Prop({
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],

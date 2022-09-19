@@ -38,7 +38,9 @@ export class CommentsService {
     post.comments.push(newComment._id);
     await post.save();
 
-    return newComment.save();
+    await newComment.save();
+
+    return newComment.populate({ path: "owner", select: "name avatar _id" });
   }
 
   async update(userId: string, commentId: string, commentContent: string) {

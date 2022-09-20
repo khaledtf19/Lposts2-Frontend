@@ -84,9 +84,14 @@ export class PostsService {
   }
 
   async delete(user: UserDto, id: string) {
-    const post = await this.findById(id);
+    const post = await this.postModel.findById(id).exec();
+
+    if (!post) {
+      throw new ForbiddenException("Can't find this post");
+    }
+
     if (post.owner.toString() !== user._id.toString()) {
-      throw new ForbiddenException();
+      throw new ForbiddenException("Not the owner");
     }
 
     const updateUser = await this.UserModule.findById(user._id.toString());

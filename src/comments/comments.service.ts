@@ -3,7 +3,6 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Post, PostDocument } from "src/posts/models/post.schema";
 import { UserDto } from "src/users/dto/users.dto";
-import { User, UserDocument } from "src/users/models/user.schema";
 import { Comment, CommentDocument } from "./models/comment.schema";
 
 @Injectable()
@@ -11,13 +10,12 @@ export class CommentsService {
   constructor(
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
     @InjectModel(Post.name) private postModel: Model<PostDocument>,
-    @InjectModel(User.name) private UserModule: Model<UserDocument>,
   ) {}
 
   async findPostComments(postId: string) {
     const post = await this.postModel.findById(postId);
     if (!post) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(`Can't find this post`);
     }
 
     return await this.commentModel.find({ postId: postId }).exec();
@@ -32,7 +30,7 @@ export class CommentsService {
 
     const post = await this.postModel.findById(postId);
     if (!post) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(`Can't find this post`);
     }
 
     post.comments.push(newComment._id);
@@ -46,8 +44,12 @@ export class CommentsService {
   async update(userId: string, commentId: string, commentContent: string) {
     const comment = await this.commentModel.findById(commentId).exec();
 
+    if (!comment) {
+      throw new ForbiddenException(`Can't find this Comment`);
+    }
+
     if (userId !== comment.owner.toString()) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(`You are not the owner of this comment`);
     }
 
     comment.commentContent = commentContent;
@@ -59,11 +61,11 @@ export class CommentsService {
     const comment = await this.commentModel.findById(commentId).exec();
 
     if (!comment) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(`Can't find this Comment`);
     }
 
     if (userId !== comment.owner.toString()) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(`You are not the owner of this comment`);
     }
 
     let commentIndex = null;
@@ -84,18 +86,17 @@ export class CommentsService {
     const comment = await this.commentModel.findById(commentId).exec();
 
     if (!comment) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(`Can't find this Comment`);
     }
 
-    let likeIndex = null;
-
-    const filter = comment.whoLike.filter((userId1, index) => {
-      likeIndex = index;
+    const filter = comment.whoLike.filter((userId1) => {
       return userId1.toString() === user._id.toString();
     });
 
     if (filter.length !== 0) {
-      comment.whoLike.splice(likeIndex, 1);
+      comment.whoLike = comment.whoLike.filter((userId1) => {
+        return userId1.toString() !== user._id.toString();
+      });
     } else {
       comment.whoLike.push(user._id);
     }

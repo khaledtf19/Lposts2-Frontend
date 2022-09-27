@@ -15,13 +15,13 @@ export class Post {
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     default: [],
   })
-  whoLike: [mongoose.Schema.Types.ObjectId];
+  whoLike: mongoose.Schema.Types.ObjectId[];
 
   @Prop({
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
     default: [],
   })
-  comments: [mongoose.Schema.Types.ObjectId];
+  comments: mongoose.Schema.Types.ObjectId[];
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

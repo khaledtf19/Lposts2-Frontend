@@ -32,7 +32,7 @@ export class PostsService {
       .exec();
 
     if (!post) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(`Can't find this Post`);
     }
 
     return post;
@@ -40,7 +40,7 @@ export class PostsService {
 
   async findAllUserPosts(userId: string) {
     const user = await this.UserModule.findById(userId).exec();
-    if (!user) throw new ForbiddenException();
+    if (!user) throw new ForbiddenException(`Can't find this Users`);
 
     const posts = await this.postModel
       .find({ owner: userId })
@@ -70,11 +70,11 @@ export class PostsService {
     const post = await this.postModel.findById(id).exec();
 
     if (!post) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(`Can't find this Post`);
     }
 
     if (post.owner.toString() !== user._id.toString()) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(`You are not the owner of this post`);
     }
 
     post.postContent = postContent;
@@ -112,17 +112,16 @@ export class PostsService {
   async like(user: UserDto, id: string) {
     const post = await this.postModel.findById(id).exec();
 
-    if (!post) throw new ForbiddenException();
+    if (!post) throw new ForbiddenException(`Can't find this post...`);
 
-    let likeIndex = null;
-
-    const filter = post.whoLike.filter((userId, index) => {
-      likeIndex = index;
+    const filter = post.whoLike.filter((userId) => {
       return userId.toString() === user._id.toString();
     });
 
     if (filter.length !== 0) {
-      post.whoLike.splice(likeIndex, 1);
+      post.whoLike = post.whoLike.filter((userId) => {
+        return userId.toString() !== user._id.toString();
+      });
     } else {
       post.whoLike.push(user._id);
     }

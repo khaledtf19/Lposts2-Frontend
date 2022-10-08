@@ -49,7 +49,13 @@ export class PostsService {
       .exec();
     return {
       posts: posts,
-      user: { _id: user._id, name: user.name, avatar: user.avatar },
+      user: {
+        _id: user._id,
+        name: user.name,
+        avatar: user.avatar,
+        following: user.following,
+        followers: user.followers,
+      },
     };
   }
 

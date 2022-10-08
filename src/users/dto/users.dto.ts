@@ -1,5 +1,5 @@
 import { IsEmail, IsNotEmpty, MinLength, Length } from "class-validator";
-import * as mongoose from "mongoose";
+import { ObjectId } from "mongoose";
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -23,13 +23,14 @@ export class CreateUserDto {
 }
 
 export class UserDto {
-  _id: mongoose.Schema.Types.ObjectId;
+  _id: ObjectId;
   name: string;
   email?: string;
   avatar?: string;
   password?: string;
-  posts?: [] | any;
-  friends?: [] | any;
+  posts?: ObjectId[];
+  followers?: ObjectId[];
+  following?: ObjectId[];
 }
 
 export class UpdateUserNameDto {
@@ -50,7 +51,7 @@ export class FollowUserDto {
 }
 
 export class CreateUserResponseDto {
-  data: { email: string; _id: mongoose.ObjectId; name: string };
+  data: { email: string; _id: ObjectId; name: string };
 }
 
 export class UpdateUserResponseDto {

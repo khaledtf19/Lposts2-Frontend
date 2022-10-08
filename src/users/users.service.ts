@@ -32,6 +32,8 @@ export class UsersService {
       _id: user._id,
       name: user.name,
       avatar: user.avatar,
+      following: user.following,
+      followers: user.followers,
     };
   }
 

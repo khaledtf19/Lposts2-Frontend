@@ -113,6 +113,13 @@ export class UsersService {
       );
     }
 
+    if (fUser._id.toString() === tUser._id.toString()) {
+      throw new HttpException(
+        "Can't follow this user...",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     if (fUser.following.includes(tUser._id)) {
       fUser.following = fUser.following.filter(
         (userId) => userId.toString() !== tUser._id.toString(),

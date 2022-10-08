@@ -1,10 +1,4 @@
-import {
-  Injectable,
-  HttpException,
-  HttpStatus,
-  NotAcceptableException,
-  ForbiddenException,
-} from "@nestjs/common";
+import { Injectable, HttpException, HttpStatus } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import {
@@ -104,5 +98,34 @@ export class UsersService {
       email: updateUserEmailDto.email,
     });
     return { data: { email: updateUser.email, name: updateUser.name } };
+  }
+
+  async followUser(fromUser: UserDto, toUserId: string) {
+    const fUser = await this.userModel.findById(fromUser._id).exec();
+    const tUser = await this.userModel.findById(toUserId).exec();
+
+    if (!tUser) {
+      throw new HttpException(
+        "Can't find this User...",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (fUser.following.includes(tUser._id)) {
+      fUser.following = fUser.following.filter(
+        (userId) => userId.toString() !== tUser._id.toString(),
+      );
+      tUser.followers = tUser.followers.filter(
+        (userId) => userId.toString() !== fUser._id.toString(),
+      );
+    } else {
+      fUser.following.push(tUser._id);
+      tUser.followers.push(fUser._id);
+    }
+
+    await fUser.save();
+    await tUser.save();
+
+    return tUser.followers;
   }
 }

@@ -16,6 +16,7 @@ import {
   UpdateUserNameDto,
   UserDto,
   UpdateUserResponseDto,
+  FollowUserDto,
 } from "./dto/users.dto";
 import { UsersService } from "./users.service";
 
@@ -56,5 +57,11 @@ export class UsersController {
     @Body() body: UpdateUserEmailDto,
   ): Promise<UpdateUserResponseDto> {
     return this.userService.updateEmail(req.user, body);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post("follow/:userId")
+  async followUser(@Request() req: any, @Param("userId") userId: string) {
+    return this.userService.followUser(req.user, userId);
   }
 }

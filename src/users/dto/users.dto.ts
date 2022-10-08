@@ -44,6 +44,11 @@ export class UpdateUserEmailDto {
   email: string;
 }
 
+export class FollowUserDto {
+  @IsNotEmpty()
+  userId: string;
+}
+
 export class CreateUserResponseDto {
   data: { email: string; _id: mongoose.ObjectId; name: string };
 }

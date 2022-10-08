@@ -21,7 +21,13 @@ export class User {
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     default: [],
   })
-  friends: [mongoose.Schema.Types.ObjectId];
+  followers: mongoose.Schema.Types.ObjectId[];
+
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    default: [],
+  })
+  following: mongoose.Schema.Types.ObjectId[];
 
   @Prop({
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],

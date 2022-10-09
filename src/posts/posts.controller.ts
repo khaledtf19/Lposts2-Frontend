@@ -28,6 +28,12 @@ export class PostsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get("following")
+  getAllFollowingPosts(@Request() req: any) {
+    return this.postsService.findAllFollowingPosts(req.user);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post()
   createPost(
     @Request() req: any,

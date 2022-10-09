@@ -59,6 +59,18 @@ export class PostsService {
     };
   }
 
+  async findAllFollowingPosts(userReq: UserDto) {
+    const user = await this.UserModule.findById(userReq._id).exec();
+
+    const posts = this.postModel
+      .find({ owner: user.following })
+      .populate("owner", "name avatar _id")
+      .sort({ createdAt: "desc" })
+      .exec();
+
+    return posts;
+  }
+
   async create(owner: string, postContent: string): Promise<Post> {
     const newPost = new this.postModel({
       owner,
